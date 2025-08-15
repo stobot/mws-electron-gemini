@@ -2,7 +2,7 @@ const { app, BrowserWindow } = require('electron');
 const { exec } = require('child_process');
 
 // Start the TiddlyWiki server in the background.
-const tiddlywiki = exec('npx tiddlywiki . --listen port=8888');
+const tiddlywiki = exec('npm start');
 
 function createWindow () {
   const win = new BrowserWindow({
