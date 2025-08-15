@@ -1,0 +1,27 @@
+{
+  "name": "my-tiddlywiki-app",
+  "version": "1.0.0",
+  "description": "My personal TiddlyWiki with MWS",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "dependencies": {
+    "tiddlywiki": "^5.3.3",
+    "tiddlywiki-mws": "^0.1.5"
+  },
+  "devDependencies": {
+    "electron": "^28.2.3",
+    "electron-builder": "^24.9.1"
+  },
+  "build": {
+    "appId": "com.example.mytiddlywikiapp",
+    "productName": "My TiddlyWiki App",
+    "files": [
+      "main.js",
+      "package.json",
+      "tiddlywiki.info",
+      "tiddlers/"
+    ]
+  }
+}
