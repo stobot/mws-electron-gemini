@@ -4,7 +4,7 @@
   "description": "My personal TiddlyWiki with MWS",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "npx mws listen"
   },
   "dependencies": {
     "tiddlywiki": "^5.3.3"
