@@ -1,42 +1,42 @@
 const { app, BrowserWindow } = require('electron');
 const { exec } = require('child_process');
+const http = require('http');
 
-// This correctly starts the MWS server via the npm script.
+// Start the MWS server via the npm script.
 const mwsServer = exec('npm start');
 
-function createWindow () {
+// This function creates the application window.
+function createWindow() {
+  // First, check if a window is already open. This prevents duplicates.
+  if (BrowserWindow.getAllWindows().length > 0) return;
+
   const win = new BrowserWindow({
     width: 1200,
     height: 800,
   });
 
-  // The MWS server uses port 8080 by default. This is a key change.
+  // Load the URL for the MWS server, which defaults to port 8080.
   win.loadURL('http://127.0.0.1:8080');
 }
 
-// Listen for output from the server process.
-mwsServer.stdout.on('data', (data) => {
-  // The MWS server outputs "listening on port" when it's ready.
-  // This is the second key change.
-  if (data.includes('listening on port')) {
-    // As soon as we see that message, we create the window.
-    // We add a check to make sure we don't accidentally open multiple windows.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
-  }
-});
+// This function repeatedly checks if the server is running.
+const checkServerReady = () => {
+  http.get('http://127.0.0.1:8080', (res) => {
+    // If we get any valid response, it means the server is up.
+    console.log('Server is ready. Creating window.');
+    createWindow();
+  }).on('error', (err) => {
+    // If the connection is refused, the server isn't ready yet.
+    // We will wait half a second and try again.
+    console.log('Server not ready, retrying in 500ms...');
+    setTimeout(checkServerReady, 500);
+  });
+};
 
-// It's also good practice to log any errors.
-mwsServer.stderr.on('data', (data) => {
-  console.error(`MWS Server Error: ${data}`);
-});
+// When the Electron application is ready, start checking for the server.
+app.whenReady().then(checkServerReady);
 
-// We don't need anything inside app.whenReady() because the
-// stdout listener above will trigger the window creation.
-app.whenReady();
-
-// Make sure we shut down the server when the app closes.
+// Make sure we shut down the server process when all windows are closed.
 app.on('window-all-closed', () => {
   mwsServer.kill();
   if (process.platform !== 'darwin') {
