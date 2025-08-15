@@ -20,7 +20,10 @@
       "main.js",
       "package.json",
       "tiddlywiki.info",
-      "tiddlers/"
-    ]
+      "wikis/"
+    ],
+    "win": {
+      "target": "portable"
+    }
   }
 }
